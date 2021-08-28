@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenLMBookStore.Entities;
+using OpenLMBookStore.Middleware;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,8 @@ namespace OpenLMBookStore
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenLMBookStore v1"));
             }
+
+            app.UseCustomExceptionMiddleWare();
 
             app.UseHttpsRedirection();
 

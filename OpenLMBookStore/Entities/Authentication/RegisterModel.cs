@@ -12,6 +12,7 @@ namespace OpenLMBookStore.Entities.Authentication
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Email Address is Required")]
+        [EmailAddress]
         public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "Password is Required")]

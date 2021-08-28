@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using OpenLMBookStore.Entities.Authentication;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,12 +24,17 @@ namespace OpenLMBookStore.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthenticateController> _logger;
 
-        public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthenticateController(UserManager<IdentityUser> userManager, 
+                                      RoleManager<IdentityRole> roleManager, 
+                                      IConfiguration configuration,
+                                      ILogger<AuthenticateController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -58,6 +66,8 @@ namespace OpenLMBookStore.Controllers
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
+
+                _logger.LogInformation("Login Successfully");
 
                 return Ok(new
                 {
@@ -110,10 +120,10 @@ namespace OpenLMBookStore.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new Response { Status = "Error", 
-                                   Message = "User creation failed! Please check user details and try again." });
-
+            {
+                ModelState.AddModelError(nameof(IdentityUser), JsonConvert.SerializeObject(result.Errors));
+                return BadRequest(ModelState);
+            }
             if(model.AdminType == AdminType.Admin)
             {
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
