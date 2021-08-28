@@ -11,8 +11,6 @@ namespace OpenLMBookStore.Entities
 
         public string PublisherName { get; set; }
 
-        public DateTime PublishedDate { get; set; }
-
         public Book[] Books { get; set; }
     }
 }
