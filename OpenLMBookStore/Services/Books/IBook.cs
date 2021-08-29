@@ -13,6 +13,8 @@ namespace OpenLMBookStore.Services.Books
 
         Task<BookModel> GetBookById(string bookId);
 
+        Task<IEnumerable<BookModel>> GetAllBooks();
+
         Task<BookModel> UpdateBook(string bookId, BookModel bookDto);
 
         Task<HttpResponseMessage> DeleteBook(string bookId);

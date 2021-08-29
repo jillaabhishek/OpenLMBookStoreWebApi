@@ -26,8 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Services\Authors\" />
-    <Folder Include="Services\Publishers\" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenLMBookStore.Entities;
 using OpenLMBookStore.Middleware;
+using OpenLMBookStore.Services.Authors;
 using OpenLMBookStore.Services.Books;
+using OpenLMBookStore.Services.Publishers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,8 @@ namespace OpenLMBookStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IBook, BookService>();
-            
+            services.AddScoped<IAuthor, AuthorService>();
+            services.AddScoped<IPublisher, PublisherService>();            
 
             services.AddDbContext<BookStoreDbContext>(options =>
             {

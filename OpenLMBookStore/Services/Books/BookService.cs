@@ -62,6 +62,17 @@ namespace OpenLMBookStore.Services.Books
             return await Task.FromResult(response);
         }
 
+        public async Task<IEnumerable<BookModel>> GetAllBooks()
+        {
+            IList<Book> book = await _dbContext.Books
+                            .Include(x => x.Author)
+                            .Include(x => x.Publisher)
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            return _mapper.Map<IList<BookModel>>(book);
+        }
+
         public async Task<BookModel> GetBookById(string bookId)
         {
             Book book = await _dbContext.Books
