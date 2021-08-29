@@ -8,6 +8,8 @@ namespace OpenLMBookStore.Services.Publishers
 {
     public interface IPublisher
     {
+        Task<PublisherModel> AddPublisher(PublisherModel publisherDto);
+
         Task<PublisherModel> GetAllBooks(string publisherId);
 
         Task<IEnumerable<PublisherModel>> GetAllPublisher();

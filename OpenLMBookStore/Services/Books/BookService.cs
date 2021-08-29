@@ -32,6 +32,9 @@ namespace OpenLMBookStore.Services.Books
             if (string.IsNullOrEmpty(book.BookId))
                 book.BookId = Guid.NewGuid().ToString();
 
+            _dbContext.Attach(book.Author);
+            _dbContext.Attach(book.Publisher);
+
             _dbContext.Books.Add(book);
 
             await _dbContext.SaveChangesAsync();

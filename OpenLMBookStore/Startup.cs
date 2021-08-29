@@ -15,6 +15,7 @@ using OpenLMBookStore.Entities;
 using OpenLMBookStore.Middleware;
 using OpenLMBookStore.Services.Authors;
 using OpenLMBookStore.Services.Books;
+using OpenLMBookStore.Services.Orders;
 using OpenLMBookStore.Services.Publishers;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,8 @@ namespace OpenLMBookStore
         {
             services.AddScoped<IBook, BookService>();
             services.AddScoped<IAuthor, AuthorService>();
-            services.AddScoped<IPublisher, PublisherService>();            
+            services.AddScoped<IPublisher, PublisherService>();
+            services.AddScoped<IOrder, OrderService>();
 
             services.AddDbContext<BookStoreDbContext>(options =>
             {

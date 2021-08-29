@@ -19,6 +19,19 @@ namespace OpenLMBookStore.Services.Publishers
             _mapper = mapper;
         }
 
+        public async Task<PublisherModel> AddPublisher(PublisherModel publisherDto)
+        {
+            if (string.IsNullOrEmpty(publisherDto.PublisherId))
+                publisherDto.PublisherId = Guid.NewGuid().ToString();
+
+            Publisher publisher = _mapper.Map<Publisher>(publisherDto);
+            _dbContext.Publishers.Add(publisher);
+
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map<PublisherModel>(publisher);
+        }
+
         public async Task<PublisherModel> GetAllBooks(string publisherId)
         {
             Publisher publisher = await _dbContext.Publishers

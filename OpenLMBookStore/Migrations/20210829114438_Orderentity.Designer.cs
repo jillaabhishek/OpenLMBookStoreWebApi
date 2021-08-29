@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenLMBookStore.Entities;
 
 namespace OpenLMBookStore.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    partial class BookStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210829114438_Orderentity")]
+    partial class Orderentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,31 +217,6 @@ namespace OpenLMBookStore.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("OpenLMBookStore.Entities.Address", b =>
-                {
-                    b.Property<string>("AddressId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AddressStreet1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressStreet2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AddressId");
-
-                    b.ToTable("Addresses");
-                });
-
             modelBuilder.Entity("OpenLMBookStore.Entities.Author", b =>
                 {
                     b.Property<string>("AuthorId")
@@ -311,9 +288,6 @@ namespace OpenLMBookStore.Migrations
                     b.Property<string>("OrderId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AddressId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("BookId")
                         .HasColumnType("nvarchar(450)");
 
@@ -336,8 +310,6 @@ namespace OpenLMBookStore.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("BookId");
 
@@ -425,15 +397,9 @@ namespace OpenLMBookStore.Migrations
 
             modelBuilder.Entity("OpenLMBookStore.Entities.Order", b =>
                 {
-                    b.HasOne("OpenLMBookStore.Entities.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
-
                     b.HasOne("OpenLMBookStore.Entities.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId");
-
-                    b.Navigation("Address");
 
                     b.Navigation("Book");
                 });

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OpenLMBookStore.Entities.Authentication;
+using OpenLMBookStore.Services.Authors;
+using OpenLMBookStore.Services.Publishers;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,16 +27,22 @@ namespace OpenLMBookStore.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthenticateController> _logger;
+        private readonly IAuthor _author;
+        private readonly IPublisher _publisher;
 
         public AuthenticateController(UserManager<IdentityUser> userManager,
                                       RoleManager<IdentityRole> roleManager,
                                       IConfiguration configuration,
-                                      ILogger<AuthenticateController> logger)
+                                      ILogger<AuthenticateController> logger,
+                                      IAuthor author,
+                                      IPublisher publisher)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _logger = logger;
+            _author = author;
+            _publisher = publisher;
         }
 
         [HttpPost]
@@ -130,6 +138,12 @@ namespace OpenLMBookStore.Controllers
                 await _roleManager.CreateAsync(new IdentityRole(model.AdminType.ToString()));
 
             await _userManager.AddToRoleAsync(user, model.AdminType.ToString());
+
+            if (model.AdminType.Equals(AdminType.Author))
+                await _author.AddAuthor(new Dtos.AuthorModel() { Name = model.UserName });
+
+            if (model.AdminType.Equals(AdminType.Publisher))
+                await _publisher.AddPublisher(new Dtos.PublisherModel() { PublisherName = model.UserName });
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }

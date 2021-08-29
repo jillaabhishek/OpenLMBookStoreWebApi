@@ -20,6 +20,10 @@ namespace OpenLMBookStore.Mapping
             CreateMap<Author, AuthorModel>().ReverseMap();
 
             CreateMap<Publisher, PublisherModel>().ReverseMap();
+
+            CreateMap<Order, OrderModel>().ReverseMap();
+
+            CreateMap<Address, AddressModel>().ReverseMap();
         }
     }
 }

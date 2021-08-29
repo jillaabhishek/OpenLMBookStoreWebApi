@@ -59,17 +59,13 @@ namespace OpenLMBookStore.Controllers
         public async Task<ActionResult<BookModel>> UpdateBook(string bookId, BookModel bookDto)
         {
             if (bookDto == null)
-                return NotFound();
+                return BadRequest("Book model is null");
 
             if (bookId != bookDto.BookId)
-            {
                 return BadRequest("Parameter BookId and model bookId doesn't match.");
-            }
 
-            if (bookDto != null)
-                return await _book.UpdateBook(bookId, bookDto);
 
-            return BadRequest("Book model was null");
+            return await _book.UpdateBook(bookId, bookDto);
         }
 
         [HttpDelete("{bookId}")]

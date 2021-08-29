@@ -41,7 +41,7 @@ namespace OpenLMBookStore.Middleware
             await httpContext.Response.WriteAsync(new ErrorDetails()
             {
                 StatusCode = httpContext.Response.StatusCode,
-                Message = ex.Message
+                Message = ex.Message +" "+ex.InnerException
             }.ToString()); 
         }
     }

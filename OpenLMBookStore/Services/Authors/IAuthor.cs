@@ -8,6 +8,8 @@ namespace OpenLMBookStore.Services.Authors
 {
     public interface IAuthor
     {
+        Task<AuthorModel> AddAuthor(AuthorModel authorDto);
+
         Task<AuthorModel> GetAllBooks(string authorId);
 
         Task<IEnumerable<AuthorModel>> GetAllAuthor();

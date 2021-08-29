@@ -20,5 +20,9 @@ namespace OpenLMBookStore.Entities
         public DbSet<Author> Authors { get; set; }
 
         public DbSet<Publisher> Publishers { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Address> Addresses { get; set; }
     }
 }

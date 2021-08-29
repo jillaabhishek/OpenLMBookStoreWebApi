@@ -21,6 +21,20 @@ namespace OpenLMBookStore.Services.Authors
             _mapper = mapper;
         }
 
+        public async Task<AuthorModel> AddAuthor(AuthorModel authorDto)
+        {
+            if (string.IsNullOrEmpty(authorDto.AuthorId))
+                authorDto.AuthorId = Guid.NewGuid().ToString();
+
+            Author author = _mapper.Map<Author>(authorDto);
+
+            _dbContext.Authors.Add(author);
+
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map<AuthorModel>(author);
+        }
+
         public async Task<IEnumerable<AuthorModel>> GetAllAuthor()
         {
             IList<Author> authors = await _dbContext.Authors.ToListAsync();
