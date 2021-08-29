@@ -11,6 +11,6 @@ namespace OpenLMBookStore.Entities
 
         public string PublisherName { get; set; }
 
-        public Book[] Books { get; set; }
+        public IEnumerable<Book> Books { get; set; }
     }
 }

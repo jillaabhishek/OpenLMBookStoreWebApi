@@ -13,10 +13,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenLMBookStore.Entities;
 using OpenLMBookStore.Middleware;
+using OpenLMBookStore.Services.Books;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace OpenLMBookStore
@@ -33,6 +35,9 @@ namespace OpenLMBookStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IBook, BookService>();
+            
+
             services.AddDbContext<BookStoreDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("BookStoreSqlServerDb"));
@@ -50,18 +55,20 @@ namespace OpenLMBookStore
             }).AddJwtBearer(options =>
             {
                 options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = false;                
                 options.TokenValidationParameters = new TokenValidationParameters()
-                {
+                {                    
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidAudience = Configuration["JWT:ValidAudience"],
                     ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))                    
                 };
             });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OpenLMBookStore", Version = "v1" });

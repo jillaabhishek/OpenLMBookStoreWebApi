@@ -12,5 +12,7 @@ namespace OpenLMBookStore.Dtos
 
         [Required]
         public string PublisherName { get; set; }
+
+        public IEnumerable<BookModel> Books { get; set; }
     }
 }

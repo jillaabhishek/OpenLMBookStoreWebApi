@@ -14,14 +14,15 @@ namespace OpenLMBookStore.Dtos
         public string Name { get; set; }
 
         [Required]
-        [MinLength(1, ErrorMessage ="Book price should be greater than zero")]
-        [MaxLength(1000, ErrorMessage ="Book price can't be greater than 1000")]
+        //[MinLength(1, ErrorMessage ="Book price should be greater than zero")]
+        //[MaxLength(1000, ErrorMessage ="Book price can't be greater than 1000")]
+        [Range(1, 1000, ErrorMessage ="Book price should range be 1 to 1000")]
         public decimal Price { get; set; }
 
         [Required]        
         public string Description { get; set; }
         
-        [Required]        
+        //[Required]        
         public byte[] BookCoverImage { get; set; }
         
         [Required]        
@@ -31,16 +32,18 @@ namespace OpenLMBookStore.Dtos
         public Binding BookBinding { get; set; }
         
         [Required]
-        [MinLength(50, ErrorMessage = "No of pages in book should be greater than 50 pages")]
-        [MaxLength(2000, ErrorMessage = "No of pages in book can't be greater than 2000 pages")]
+        //[MinLength(50, ErrorMessage = "No of pages in book should be greater than 50 pages")]
+        //[MaxLength(2000, ErrorMessage = "No of pages in book can't be greater than 2000 pages")]
+        [Range(1, 1000, ErrorMessage = "Book pages range should be 1 to 1000")]
         public int NoOfPages { get; set; }
         
         [Required]
         public string Language { get; set; }
         
         [Required]
-        [MinLength(1, ErrorMessage = "Book quantity should be greater than zero")]
-        [MaxLength(10000, ErrorMessage = "Book quantity can't be greater than 10000")]
+        //[MinLength(1, ErrorMessage = "Book quantity should be greater than zero")]
+        //[MaxLength(10000, ErrorMessage = "Book quantity can't be greater than 10000")]
+        [Range(1, 1000, ErrorMessage = "Book quantity range should be 1 to 10000")]
         public int Quantity { get; set; }
 
         [Required]

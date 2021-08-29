@@ -13,6 +13,6 @@ namespace OpenLMBookStore.Dtos
         [Required]
         public string Name { get; set; }
 
-        public BookModel[] Books { get; set; }
+        public IEnumerable<BookModel> Books { get; set; }
     }
 }

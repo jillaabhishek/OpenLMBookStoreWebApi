@@ -11,7 +11,7 @@ namespace OpenLMBookStore.Entities
 
         public string Name { get; set; }
 
-        public Book[] Books { get; set; }
+        public IEnumerable<Book> Books { get; set; }
 
         //Awards can be added. Own by author
     }

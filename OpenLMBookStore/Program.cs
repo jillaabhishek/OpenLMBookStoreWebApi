@@ -15,12 +15,9 @@ namespace OpenLMBookStore
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
 
-            Log.Information("Application Started");
             CreateHostBuilder(args).Build().Run();
-            Log.Information("Application Ended");
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

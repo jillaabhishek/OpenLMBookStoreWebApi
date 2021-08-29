@@ -26,8 +26,8 @@ namespace OpenLMBookStore.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthenticateController> _logger;
 
-        public AuthenticateController(UserManager<IdentityUser> userManager, 
-                                      RoleManager<IdentityRole> roleManager, 
+        public AuthenticateController(UserManager<IdentityUser> userManager,
+                                      RoleManager<IdentityRole> roleManager,
                                       IConfiguration configuration,
                                       ILogger<AuthenticateController> logger)
         {
@@ -39,7 +39,7 @@ namespace OpenLMBookStore.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
@@ -57,7 +57,7 @@ namespace OpenLMBookStore.Controllers
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                SymmetricSecurityKey authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration  ["JWT:Secret"]));
+                SymmetricSecurityKey authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
@@ -84,7 +84,7 @@ namespace OpenLMBookStore.Controllers
         {
             var userExists = await _userManager.FindByNameAsync(model.UserName);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, 
+                return StatusCode(StatusCodes.Status500InternalServerError,
                                 new Response { Status = "Error", Message = "User already exists!" });
 
             IdentityUser user = new IdentityUser()
@@ -95,10 +95,11 @@ namespace OpenLMBookStore.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, 
+                return StatusCode(StatusCodes.Status500InternalServerError,
                                 new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+            if (await _roleManager.RoleExistsAsync(UserRoles.User))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
@@ -109,7 +110,7 @@ namespace OpenLMBookStore.Controllers
         {
             var userExists = await _userManager.FindByNameAsync(model.UserName);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, 
+                return StatusCode(StatusCodes.Status500InternalServerError,
                             new Response { Status = "Error", Message = "User already exists!" });
 
             IdentityUser user = new IdentityUser()
@@ -124,18 +125,11 @@ namespace OpenLMBookStore.Controllers
                 ModelState.AddModelError(nameof(IdentityUser), JsonConvert.SerializeObject(result.Errors));
                 return BadRequest(ModelState);
             }
-            if(model.AdminType == AdminType.Admin)
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            }
-            else if(model.AdminType == AdminType.Author)
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Author));
-            }
-            else if (model.AdminType == AdminType.Publisher)
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Publisher));
-            }
+
+            if (!await _roleManager.RoleExistsAsync(model.AdminType.ToString()))
+                await _roleManager.CreateAsync(new IdentityRole(model.AdminType.ToString()));
+
+            await _userManager.AddToRoleAsync(user, model.AdminType.ToString());
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
